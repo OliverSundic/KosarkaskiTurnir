@@ -1,0 +1,122 @@
+/* public/css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap');
+
+:root {
+    --bg-color: #192132;
+    --cyan: #00F0FF;
+    --input-bg: #D9D9D9;
+    --text-white: #FFFFFF;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-white);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigacija na vrhu */
+.nav-header {
+    background-color: var(--input-bg);
+    color: #000000;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+.razmak{
+    padding-right: 20%;
+}
+.nav-header a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.auth-container {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 3%;
+}
+
+.cyan-title {
+    color: var(--cyan);
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 40px;
+}
+.turniri{
+    font-size: 20px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    flex: 0 0 120px;
+    color: var(--cyan);
+    font-size: 20px;
+}
+
+input, select {
+    background-color: var(--input-bg);
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    font-family: inherit;
+    height: 32px;
+}
+
+#login{
+    margin-top: 6%;
+}
+
+select{
+    padding-left: 1%;
+}
+
+.input{
+    width: 30%;
+    padding-left: 1%;
+}
+
+.btn-submit {
+    background-color: var(--cyan);
+    color: var(--bg-color);
+    border: none;
+    padding: 12px 40px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+    font-size: 18px;
+    transition: opacity 0.2s;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+}
+
+.footer-text {
+    text-align: center;
+    font-size: 18px;
+}
+
+.footer-text a {
+    color: var(--cyan);
+    text-decoration: none;
+}
+
+#razmak-gore{
+    margin-top: 10%;
+    margin-bottom: 2%;
+}

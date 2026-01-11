@@ -1,0 +1,62 @@
+models:
+  User:
+    name: string
+    email: string unique
+    password: string
+    role: enum:organizer,manager,referee,fan default:fan
+    relationships:
+      hasOne: Team
+      hasMany: Tournament, Utakmica
+
+  Tournament:
+    user_id: id foreign:users
+    naziv: string:255
+    datum_pocetka: datetime
+    datum_zavrsetka: datetime
+    broj_timova: integer
+    lokacija: string:255
+    relationships:
+      hasMany: Team, Utakmica
+      belongsTo: User
+
+  Team:
+    user_id: id foreign:users
+    tournament_id: id foreign:tournaments
+    naziv: string:255
+    grad: string:100
+    broj_bodova: integer default:0
+    relationships:
+      hasMany: Player
+      belongsTo: Tournament, User
+
+  Player:
+    team_id: id foreign:teams
+    ime: string:100
+    prezime: string:100
+    broj_dresa: integer
+    pozicija: enum:plejmejker,bek,krilo,krilni_centar,centar
+    relationships:
+      belongsTo: Team
+
+  Utakmica:
+    tournament_id: id foreign:tournaments
+    domaci_tim_id: id foreign:teams
+    strani_tim_id: id foreign:teams
+    referee_id: id foreign:users
+    mesto: string:255
+    rezultat: string:20 nullable
+    status: enum:zakazana,u_toku,zavrsena,otkazana default:zakazana
+    relationships:
+      belongsTo: Tournament, User
+
+controllers:
+  Tournament:
+    resource: index, create, store, show, edit, update, destroy
+  Team:
+    resource: index, create, store, show, edit, update, destroy
+  Player:
+    resource: index, create, store, show, edit, update, destroy
+  Utakmica:
+    resource: index, create, store, show, edit, update, destroy
+
+seeders: User, Tournament, Team, Player, Utakmica

@@ -1,0 +1,55 @@
+created:
+    - app/Http/Controllers/TournamentController.php
+    - app/Http/Controllers/TeamController.php
+    - app/Http/Controllers/PlayerController.php
+    - app/Http/Controllers/UtakmicaController.php
+    - database/factories/UserFactory.php
+    - database/factories/TournamentFactory.php
+    - database/factories/TeamFactory.php
+    - database/factories/PlayerFactory.php
+    - database/factories/UtakmicaFactory.php
+    - database/migrations/2026_01_09_182916_create_users_table.php
+    - database/migrations/2026_01_09_182917_create_tournaments_table.php
+    - database/migrations/2026_01_09_182918_create_teams_table.php
+    - database/migrations/2026_01_09_182919_create_players_table.php
+    - database/migrations/2026_01_09_182920_create_utakmicas_table.php
+    - app/Models/User.php
+    - app/Models/Tournament.php
+    - app/Models/Team.php
+    - app/Models/Player.php
+    - app/Models/Utakmica.php
+    - database/seeders/UserSeeder.php
+    - database/seeders/TournamentSeeder.php
+    - database/seeders/TeamSeeder.php
+    - database/seeders/PlayerSeeder.php
+    - database/seeders/UtakmicaSeeder.php
+    - tests/Feature/Http/Controllers/TournamentControllerTest.php
+    - tests/Feature/Http/Controllers/TeamControllerTest.php
+    - tests/Feature/Http/Controllers/PlayerControllerTest.php
+    - tests/Feature/Http/Controllers/UtakmicaControllerTest.php
+updated:
+    - routes/web.php
+skipped:
+    - resources/views/tournament/index.blade.php
+    - resources/views/tournament/create.blade.php
+    - resources/views/tournament/show.blade.php
+    - resources/views/tournament/edit.blade.php
+    - resources/views/team/index.blade.php
+    - resources/views/team/create.blade.php
+    - resources/views/team/show.blade.php
+    - resources/views/team/edit.blade.php
+    - resources/views/player/index.blade.php
+    - resources/views/player/create.blade.php
+    - resources/views/player/show.blade.php
+    - resources/views/player/edit.blade.php
+    - resources/views/utakmica/index.blade.php
+    - resources/views/utakmica/create.blade.php
+    - resources/views/utakmica/show.blade.php
+    - resources/views/utakmica/edit.blade.php
+models:
+    User: { name: string, email: 'string unique', password: string, role: 'enum:organizer,manager,referee,fan default:fan', relationships: { hasOne: Team, hasMany: 'Tournament, Utakmica' } }
+    Tournament: { user_id: 'id foreign:users', naziv: 'string:255', datum_pocetka: datetime, datum_zavrsetka: datetime, broj_timova: integer, lokacija: 'string:255', relationships: { hasMany: 'Team, Utakmica', belongsTo: User } }
+    Team: { user_id: 'id foreign:users', tournament_id: 'id foreign:tournaments', naziv: 'string:255', grad: 'string:100', broj_bodova: 'integer default:0', relationships: { hasMany: Player, belongsTo: 'Tournament, User' } }
+    Player: { team_id: 'id foreign:teams', ime: 'string:100', prezime: 'string:100', broj_dresa: integer, pozicija: 'enum:plejmejker,bek,krilo,krilni_centar,centar', relationships: { belongsTo: Team } }
+    Match: { tournament_id: 'id foreign:tournaments', domaci_tim_id: 'id foreign:teams', strani_tim_id: 'id foreign:teams', referee_id: 'id foreign:users', mesto: 'string:255', rezultat: 'string:20 nullable', status: 'enum:zakazana,u_toku,zavrsena,otkazana default:zakazana', relationships: { belongsTo: Tournament } }
+    Utakmica: { tournament_id: 'id foreign:tournaments', domaci_tim_id: 'id foreign:teams', strani_tim_id: 'id foreign:teams', referee_id: 'id foreign:users', mesto: 'string:255', rezultat: 'string:20 nullable', status: 'enum:zakazana,u_toku,zavrsena,otkazana default:zakazana', relationships: { belongsTo: 'Tournament, User' } }
