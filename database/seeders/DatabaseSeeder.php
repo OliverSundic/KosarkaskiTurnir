@@ -14,31 +14,30 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-{
-    // Kreiramo Organizatora
-    \App\Models\User::factory()->create([
-        'first_name' => 'Glavni',
-        'last_name' => 'organizator',
-        'email' => 'admin@raf.rs',
-        'password' => bcrypt('password'),
-        'role' => 'organizer',
-    ]);
+    {
+        // Korisnici
+        \App\Models\User::create([
+            'first_name' => 'Glavni',
+            'last_name' => 'Organizator',
+            'email' => 'admin@raf.rs',
+            'password' => bcrypt('password'),
+            'role' => 'organizer',
+        ]);
 
-    // Kreiramo Sudiju
-    \App\Models\User::factory()->create([
-        'first_name' => 'Sudija',
-        'last_name' => 'Marko',
-        'email' => 'sudija@raf.rs',
-        'password' => bcrypt('password'),
-        'role' => 'referee',
-    ]);
+        \App\Models\User::create([
+            'first_name' => 'Sudija',
+            'last_name' => 'Marko',
+            'email' => 'sudija@raf.rs',
+            'password' => bcrypt('password'),
+            'role' => 'referee',
+        ]);
 
-    // Ostali seederi
-    $this->call([
-        TournamentSeeder::class,
-        TeamSeeder::class,
-        PlayerSeeder::class,
-        UtakmicaSeeder::class,
-    ]);
-}
+        // Redosled je bitan: prvo turnir, pa timovi, pa igrači
+        $this->call([
+            TournamentSeeder::class,
+            TeamSeeder::class,
+            PlayerSeeder::class,
+            UtakmicaSeeder::class,
+        ]);
+    }
 }

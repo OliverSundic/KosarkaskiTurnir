@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('ime', 100);
             $table->string('prezime', 100);
             $table->integer('broj_dresa');
-            $table->enum('pozicija', ["plejmejker","bek","krilo","krilni_centar","centar"]);
+            $table->string('pozicija');
             $table->timestamps();
         });
 

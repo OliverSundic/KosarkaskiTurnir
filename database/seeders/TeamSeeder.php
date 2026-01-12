@@ -12,6 +12,19 @@ class TeamSeeder extends Seeder
      */
     public function run(): void
     {
-        Team::factory()->count(5)->create();
+        $turnir = \App\Models\Tournament::first();
+        $user = \App\Models\User::first();
+
+        $timovi = ['Partizan', 'Crvena Zvezda', 'Real Madrid', 'Monako'];
+
+        foreach ($timovi as $ime) {
+            \App\Models\Team::create([
+                'user_id' => $user->id,
+                'tournament_id' => $turnir->id,
+                'naziv' => $ime,
+                'grad' => 'Beograd',
+                'broj_bodova' => 0
+            ]);
+        }
     }
 }

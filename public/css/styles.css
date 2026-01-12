@@ -120,3 +120,355 @@ select{
     margin-top: 10%;
     margin-bottom: 2%;
 }
+
+
+/* ... tvoj prethodni CSS ostaje, dodaj/izmeni sledeće: ... */
+
+.dashboard-container {
+    padding: 3% 10%;
+}
+
+.section-title {
+    color: var(--cyan);
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 30px;
+    margin-top: 40px;
+}
+
+/* Flexbox Grid */
+.tournament-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px; /* Razmak između kartica */
+    justify-content: flex-start;
+}
+
+/* Kartica turnira */
+.tournament-card {
+    background-color: #D9D9D9;
+    color: #000000;
+    /* Širina za 3 u redu (100% / 3 minus razmak) */
+    flex: 0 1 calc(33.333% - 27px);
+    min-width: 250px;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournament-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.tournament-card .date {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.tournament-card .info {
+    margin: 5px 0 20px 0;
+    font-size: 16px;
+}
+
+/* Link unutar kartice */
+.card-link {
+    color: #12848B;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+/* Dugme za odjavu u headeru */
+.logout-link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    color: #000000;
+    font-weight: 500;
+}
+
+
+/* Kontejner koji centrira sve na sredinu ekrana */
+.details-outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60%;
+    width: 100%;
+    padding-top: 2%;
+}
+
+/* Velika siva kartica iz tvog dizajna */
+.tournament-details-card {
+    background-color: #D9D9D9;
+    color: #000000;
+    width: 50%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-left: 2%;
+    padding-right: 2%;
+    height: auto;
+    text-align: center;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.tournament-details-card h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.details-date {
+    font-size: 26px;
+    margin-bottom: 25px;
+}
+
+.details-info {
+    font-size: 22px;
+    margin: 12px 0;
+}
+
+.details-deadline {
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+/* Tirkizno dugme */
+.btn-cyan-action {
+    display: inline-block;
+    background-color: var(--cyan); /* Koristimo tvoju varijablu #00F0FF */
+    color: #000000;
+    text-decoration: none;
+    padding: 15px 45px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 35px;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn-cyan-action:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.role-text {
+    margin-top: 20px;
+    font-weight: 500;
+    color: #333;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #000;
+    font-size: 18px;
+}
+
+
+/* Kontejner za registraciju */
+.registration-container {
+    padding: 3% 10%;
+}
+
+/* Naslovi sekcija */
+.table-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+/* Stilovi za tabelu */
+.table-section {
+    margin-top: 20px;
+}
+
+.player-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #D9D9D9; /* Svetlo siva pozadina cele tabele */
+    color: #000000;
+}
+
+.player-table th, .player-table td {
+    border: 1px solid #192132; /* Tamna ivica oko ćelija */
+    padding: 0; /* Uklanjamo padding da bi input popunio celu ćeliju */
+    height: 40px;
+    text-align: center;
+}
+
+.player-table th {
+    font-weight: 500;
+    font-size: 18px;
+    background-color: #D9D9D9;
+}
+
+/* Stilovi za inpute unutar tabele */
+.player-table input,
+.player-table select {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-family: inherit;
+    font-size: 16px;
+    color: #000000;
+}
+
+/* Specifičan stil za dugme obriši u tabeli */
+.btn-delete {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Donji deo sa dugmićima (Dodaj i Pošalji) */
+.registration-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+/* Tirkizno dugme (unificirano sa show stranicom) */
+.btn-cyan {
+    background-color: var(--cyan);
+    color: #000000;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-cyan:hover {
+    opacity: 0.9;
+}
+
+/* Stil za brojač igrača */
+#player-counter {
+    font-size: 20px;
+}
+
+/* Prilagođavanje input polja za Naziv tima i Grad (zaobljena polja sa slike) */
+.registration-container .form-group .input {
+    width: 40%;
+    background-color: #D9D9D9;
+    border-radius: 20px;
+    padding: 10px 20px;
+    height: 40px;
+    border: none;
+    margin-left: 20px;
+}
+
+.registration-container {
+    padding: 2% 8%;
+}
+
+.cyan-title-large {
+    color: var(--cyan);
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+/* Redovi za Naziv tima i Grad */
+.form-group-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cyan-label {
+    color: var(--cyan);
+    font-size: 20px;
+    width: 150px;
+}
+
+.rounded-input {
+    background-color: #D9D9D9;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    width: 350px;
+    outline: none;
+    font-size: 16px;
+}
+
+/* Tabela */
+.table-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.player-entry-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #D9D9D9;
+    color: black;
+}
+
+.player-entry-table th, .player-entry-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+}
+
+.player-entry-table input, .player-entry-table select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    outline: none;
+    font-size: 16px;
+}
+
+/* Dugmići */
+.form-buttons-flex {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn-cyan-flat {
+    background-color: var(--cyan);
+    color: black;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.btn-delete-row {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}

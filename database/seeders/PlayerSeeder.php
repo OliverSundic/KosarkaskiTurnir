@@ -12,6 +12,24 @@ class PlayerSeeder extends Seeder
      */
     public function run(): void
     {
-        Player::factory()->count(5)->create();
+        $tim = \App\Models\Team::first();
+
+        if ($tim) {
+            \App\Models\Player::create([
+                'team_id' => $tim->id,
+                'ime' => 'Bogdan',
+                'prezime' => 'Bogdanović',
+                'broj_dresa' => 13,
+                'pozicija' => 'bek'
+            ]);
+
+            \App\Models\Player::create([
+                'team_id' => $tim->id,
+                'ime' => 'Nikola',
+                'prezime' => 'Jokić',
+                'broj_dresa' => 15,
+                'pozicija' => 'centar'
+            ]);
+        }
     }
 }
