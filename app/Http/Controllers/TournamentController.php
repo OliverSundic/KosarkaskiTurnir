@@ -28,12 +28,23 @@ class TournamentController extends Controller
 
     public function show(Tournament $tournament)
     {
-        // Učitavamo broj timova i listu timova sa njihovim brojem bodova
+        // 1. Tvoja postojeća logika za timove i rang listu
         $tournament->loadCount('teams')->load(['teams' => function($query) {
-            $query->orderBy('broj_bodova', 'desc'); // Rang lista
+            $query->orderBy('broj_bodova', 'desc');
         }]);
 
-        return view('tournament.show', compact('tournament'));
+        // 2. Dodajemo učitavanje utakmica i grupisanje po kolima
+        // Ovo je deo koji ti je falio i zbog kog je izbacivao grešku
+        $utakmice = $tournament->utakmicas()
+            ->with(['domaciTim', 'straniTim'])
+            ->get()
+            ->groupBy('kolo');
+
+        // 3. Šaljemo i $tournament i $utakmice u Blade
+        return view('tournament.show', [
+            'tournament' => $tournament,
+            'utakmice' => $utakmice
+        ]);
     }
 
     public function create()
@@ -43,17 +54,31 @@ class TournamentController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Izbaci 'broj_timova' iz validacije jer ga ne šalješ kroz formu
         $request->validate([
-            'naziv' => 'required',
-            'lokacija' => 'required',
-            'rok_za_prijave' => 'required|date',
+            'naziv' => 'required|string|max:255',
+            'lokacija' => 'required|string|max:255',
             'datum_pocetka' => 'required|date',
-            'datum_zavrsetka' => 'required|date|after_or_equal:datum_pocetka',
+            'datum_zavrsetka' => 'required|date',
         ]);
 
-        Tournament::create($request->all());
+        // 2. Kreiranje objekta
+        $tournament = new Tournament();
+        $tournament->user_id = Auth::id();
+        $tournament->naziv = $request->naziv;
+        $tournament->lokacija = $request->lokacija;
+        $tournament->datum_pocetka = $request->datum_pocetka;
+        $tournament->datum_zavrsetka = $request->datum_zavrsetka;
 
-        return redirect()->route('dashboard')->with('success', 'Turnir je uspešno kreiran!');
+        // Ručno postavljamo na 0 pre čuvanja
+        $tournament->broj_timova = 0;
+
+        // 3. Čuvanje i redirect
+        if($tournament->save()) {
+            return redirect()->route('dashboard')->with('success', 'Turnir "' . $tournament->naziv . '" je uspešno kreiran!');
+        }
+
+        return "Greška pri čuvanju u bazu podataka.";
     }
 
     public function generate(Tournament $tournament)
@@ -134,5 +159,53 @@ class TournamentController extends Controller
         }
 
         return redirect()->route('dashboard')->with('success', 'Raspored je trajno sačuvan u bazi!');
+    }
+    public function leaderboard(Tournament $tournament)
+    {
+        // 1. Uzimamo sve timove turnira
+        $timovi = $tournament->teams;
+
+        // 2. Za svaki tim računamo bodove na osnovu završenih utakmica
+        $rangLista = $timovi->map(function($tim) use ($tournament) {
+            $bodovi = 0;
+
+            // Tražimo sve završene utakmice gde je ovaj tim igrao
+            $utakmice = \App\Models\Utakmica::where('tournament_id', $tournament->id)
+                ->where('status', 'zavrseno')
+                ->where(function($q) use ($tim) {
+                    $q->where('domaci_tim_id', $tim->id)
+                    ->orWhere('strani_tim_id', $tim->id);
+                })->get();
+
+            foreach ($utakmice as $utakmica) {
+                $rezultat = explode(':', $utakmica->rezultat);
+                if (count($rezultat) !== 2) continue;
+
+                $p1 = (int)$rezultat[0]; // Poeni domaćih
+                $p2 = (int)$rezultat[1]; // Poeni stranih
+
+                if ($utakmica->domaci_tim_id == $tim->id) {
+                    // Tim je bio domaćin
+                    $bodovi += ($p1 > $p2) ? 2 : 1;
+                } else {
+                    // Tim je bio gost
+                    $bodovi += ($p2 > $p1) ? 2 : 1;
+                }
+            }
+
+            // Vraćamo privremeni objekat sa nazivom i sračunatim bodovima
+            return (object) [
+                'naziv' => $tim->naziv,
+                'bodovi' => $bodovi
+            ];
+        });
+
+        // 3. Sortiramo listu po bodovima (od najvećeg ka najmanjem)
+        $rangLista = $rangLista->sortByDesc('bodovi');
+
+        return view('tournament.leaderboard', [
+            'tournament' => $tournament,
+            'timovi' => $rangLista
+        ]);
     }
 }

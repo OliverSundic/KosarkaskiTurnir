@@ -1,10 +1,10 @@
 <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-
-<div class="registration-container">
-    <div class="nav-header">
+<div class="nav-header">
         <span class="turniri">Košarkaški turniri</span>
         <a href="/dashboard" class="back-link">← Nazad</a>
     </div>
+
+<div class="registration-container">
 
     <h2 class="cyan-title-large">Kreiranje turnira</h2>
 
@@ -17,10 +17,6 @@
         <div class="form-group-row">
             <label class="cyan-label">Lokacija</label>
             <input type="text" name="lokacija" class="rounded-input" required>
-        </div>
-        <div class="form-group-row">
-            <label class="cyan-label">Rok za prijave</label>
-            <input type="date" name="rok_za_prijave" class="rounded-input" required>
         </div>
         <div class="form-group-row">
             <label class="cyan-label">Datum početka</label>

@@ -19,10 +19,10 @@ class Tournament extends Model
     protected $fillable = [
         'user_id',
         'naziv',
+        'lokacija',
+        'broj_timova',
         'datum_pocetka',
         'datum_zavrsetka',
-        'broj_timova',
-        'lokacija',
     ];
 
     /**

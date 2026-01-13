@@ -65,5 +65,45 @@ class UtakmicaController extends Controller
         return redirect()->route('utakmicas.index');
     }
 
+    public function updateScore(Request $request, Utakmica $utakmica)
+    {
+        // 1. Validacija unosa
+        $request->validate([
+            'home_points' => 'required|integer|min:0',
+            'away_points' => 'required|integer|min:0',
+        ]);
+
+        $p1 = $request->home_points;
+        $p2 = $request->away_points;
+
+        // Čuvamo rezultat u formatu "85:80"
+        $utakmica->rezultat = $p1 . ':' . $p2;
+
+        // 2. Logika za dugme "Završi utakmicu"
+        if ($request->action == 'finish' && $utakmica->status != 'zavrseno') {
+            $utakmica->status = 'zavrseno';
+
+            // Automatsko bodovanje u tabeli teams (Košarkaška pravila: Pobeda 2, Poraz 1)
+            $domaci = $utakmica->domaciTim;
+            $strani = $utakmica->straniTim;
+
+            if ($p1 > $p2) {
+                $domaci->increment('broj_bodova', 2);
+                $strani->increment('broj_bodova', 1);
+            } elseif ($p2 > $p1) {
+                $strani->increment('broj_bodova', 2);
+                $domaci->increment('broj_bodova', 1);
+            }
+        }
+        // 3. Logika za otkazivanje
+        elseif ($request->action == 'cancel') {
+            $utakmica->status = 'otkazano';
+        }
+
+        $utakmica->save();
+
+        return redirect()->route('tournaments.show', $utakmica->tournament_id)
+                        ->with('success', 'Utakmica je uspešno ažurirana.');
+    }
 
 }

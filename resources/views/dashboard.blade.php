@@ -7,12 +7,20 @@
         <button type="submit" class="logout-link">Odjavi se</button>
     </form>
 </div>
+
 @if(session('success'))
-    <div style="background-color: var(--cyan); color: black; padding: 15px; text-align: center; font-weight: bold; border-radius: 5px; margin: 20px 10%;">
+    <div style="background-color: var(--cyan); color: black; padding: 15px; text-align: center; font-weight: bold; border-radius: 5px; margin: 20px 10%; box-shadow: 0px 4px 10px rgba(0,0,0,0.3);">
         {{ session('success') }}
     </div>
 @endif
 <div class="dashboard-container">
+    @if(auth()->user()->role == 'organizer')
+    <div style="text-align: right; margin-bottom: 20px;">
+            <a href="{{ route('tournaments.create') }}" class="btn-cyan-flat">
+                + Kreiraj novi turnir
+            </a>
+        </div>
+    @endif
     <h2 class="section-title">Aktivni turniri</h2>
     <div class="tournament-grid">
         @foreach($aktivni as $turnir)
