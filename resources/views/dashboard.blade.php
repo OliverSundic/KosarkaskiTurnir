@@ -7,7 +7,11 @@
         <button type="submit" class="logout-link">Odjavi se</button>
     </form>
 </div>
-
+@if(session('success'))
+    <div style="background-color: var(--cyan); color: black; padding: 15px; text-align: center; font-weight: bold; border-radius: 5px; margin: 20px 10%;">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="dashboard-container">
     <h2 class="section-title">Aktivni turniri</h2>
     <div class="tournament-grid">

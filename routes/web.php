@@ -30,12 +30,14 @@ Route::middleware(['auth'])->group(function () {
     // Rute za Turnir (koristimo 'tournaments.show' jer ga Blade fajlovi već traže)
     Route::get('/tournament/{tournament}', [TournamentController::class, 'show'])->name('tournaments.show');
 
-    // Rute za Prijavu tima
+
     Route::get('/tournament/{tournament}/register-team', [TeamController::class, 'create'])->name('teams.register');
     Route::post('/tournament/{tournament}/register-team', [TeamController::class, 'store'])->name('teams.store');
 
-    // Ostali resursi (ukloni duple rute za turnire i timove ako ih ne koristiš)
     Route::resource('teams', TeamController::class)->except(['create', 'store']);
     Route::resource('players', PlayerController::class);
     Route::resource('utakmicas', UtakmicaController::class);
+
+    Route::get('/tournament/{tournament}/generate', [TournamentController::class, 'generate'])->name('tournaments.generate');
+    Route::post('/tournament/{tournament}/store-schedule', [TournamentController::class, 'storeSchedule'])->name('tournaments.storeSchedule');
 });

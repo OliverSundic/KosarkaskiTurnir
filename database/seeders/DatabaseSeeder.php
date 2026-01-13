@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             TournamentSeeder::class,
             TeamSeeder::class,
             PlayerSeeder::class,
-            UtakmicaSeeder::class,
+            //UtakmicaSeeder::class,
         ]);
     }
 }

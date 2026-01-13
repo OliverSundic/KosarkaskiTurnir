@@ -24,6 +24,7 @@ class Utakmica extends Model
         'rezultat',
         'status',
         'user_id',
+        'kolo',
     ];
 
     /**

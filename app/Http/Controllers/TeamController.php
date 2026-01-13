@@ -77,8 +77,8 @@ class TeamController extends Controller
             $team->players()->create($playerData);
         }
 
-        // Ovde proveri da li ti se ruta zove tournaments.show ili tournament.show
-        return redirect()->route('tournaments.show', $tournament->id)
-                        ->with('success', 'Uspešno ste prijavili tim!');
+
+        return redirect()->route('dashboard')
+                 ->with('success', 'Uspešno ste prijavili tim!');
     }
 }

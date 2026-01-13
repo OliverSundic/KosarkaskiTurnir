@@ -17,7 +17,6 @@
         <p class="details-info">{{ $tournament->teams_count }} timova</p>
         <p class="details-info">{{ $tournament->lokacija }}</p>
         <p class="details-info">Nagradni fond: 15.000€</p>
-        <p class="details-deadline">Prijave traju do 16.01.2026.</p>
 
         <div class="actions-section">
             {{-- Organizator i navijači/menadžeri sada vide dugme --}}
@@ -34,5 +33,10 @@
                 </a>
             @endif
         </div>
+        @if(auth()->user()->role == 'organizer')
+            <a href="{{ route('tournaments.generate', $tournament->id) }}" class="btn-cyan-action">
+                Generiši raspored
+            </a>
+        @endif
     </div>
 </div>

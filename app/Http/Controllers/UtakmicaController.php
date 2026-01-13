@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UtakmicaStoreRequest;
 use App\Http\Requests\UtakmicaUpdateRequest;
 use App\Models\Utakmica;
+use App\Models\Tournament;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class UtakmicaController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $utakmicas = Utakmica::all();
 
@@ -20,12 +21,12 @@ class UtakmicaController extends Controller
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
         return view('utakmica.create');
     }
 
-    public function store(UtakmicaStoreRequest $request): Response
+    public function store(UtakmicaStoreRequest $request)
     {
         $utakmica = Utakmica::create($request->validated());
 
@@ -34,21 +35,21 @@ class UtakmicaController extends Controller
         return redirect()->route('utakmicas.index');
     }
 
-    public function show(Request $request, Utakmica $utakmica): Response
+    public function show(Request $request, Utakmica $utakmica)
     {
         return view('utakmica.show', [
             'utakmica' => $utakmica,
         ]);
     }
 
-    public function edit(Request $request, Utakmica $utakmica): Response
+    public function edit(Request $request, Utakmica $utakmica)
     {
         return view('utakmica.edit', [
             'utakmica' => $utakmica,
         ]);
     }
 
-    public function update(UtakmicaUpdateRequest $request, Utakmica $utakmica): Response
+    public function update(UtakmicaUpdateRequest $request, Utakmica $utakmica)
     {
         $utakmica->update($request->validated());
 
@@ -57,10 +58,12 @@ class UtakmicaController extends Controller
         return redirect()->route('utakmicas.index');
     }
 
-    public function destroy(Request $request, Utakmica $utakmica): Response
+    public function destroy(Request $request, Utakmica $utakmica)
     {
         $utakmica->delete();
 
         return redirect()->route('utakmicas.index');
     }
+
+
 }
