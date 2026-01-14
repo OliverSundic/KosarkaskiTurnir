@@ -14,10 +14,10 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, dom, curl, libxml, mysql, sqlite, pdo_sqlite
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, curl, libxml, mysql
 
     - name: Install Dependencies
       run: composer install --prefer-dist --no-interaction
