@@ -33,7 +33,6 @@
         </p>
         <p class="details-info" style="margin: 5px 0;">{{ $tournament->teams_count }} timova</p>
         <p class="details-info" style="margin: 5px 0;">{{ $tournament->lokacija }}</p>
-        <p class="details-info" style="margin: 5px 0;">Nagradni fond: 15.000€</p>
 
         <div class="actions-section" style="margin-top: 20px; display: flex; gap: 10px; align-items:center; justify-content:center">
             @if(auth()->user()->role == 'organizer')

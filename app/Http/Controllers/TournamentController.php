@@ -28,18 +28,18 @@ class TournamentController extends Controller
 
     public function show(Tournament $tournament)
     {
-        // Tvoja postojeća logika za dovlačenje utakmica
+        // OVO DODAJ: Učitava broj povezanih timova
+        $tournament->loadCount('teams');
+
+        // Ostatak koda ostaje identičan (tvoja logika za utakmice i pobednika)
         $utakmice = $tournament->utakmicas()->get()->groupBy('kolo');
 
-        // Provera da li je turnir završen
         $ukupno = $tournament->utakmicas()->count();
         $zavrseno = $tournament->utakmicas()->where('status', 'zavrseno')->count();
         $turnirJeGotov = ($ukupno > 0) && ($ukupno === $zavrseno);
 
         $pobednik = null;
         if ($turnirJeGotov) {
-            // Pozivamo istu logiku kalkulacije koju imaš u leaderboard metodi
-            // Možeš je izdvojiti u poseban servis, ali evo najbržeg načina:
             $pobednik = $tournament->teams->map(function($tim) use ($tournament) {
                 $bodovi = 0;
                 $mecevi = $tournament->utakmicas()->where('status', 'zavrseno')
