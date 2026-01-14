@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Tournament;
 use App\Models\Team;
+use App\Models\Tournament;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class TeamRegistrationTest extends TestCase
 {
@@ -22,23 +22,23 @@ class TeamRegistrationTest extends TestCase
 
         // 2. Kreiramo turnir
         $tournament = Tournament::factory()->create([
-            'naziv' => 'Kup Srbije 2026'
+            'naziv' => 'Kup Srbije 2026',
         ]);
 
         // 3. Kreiramo tim sa SVIM potrebnim poljima (uključujući user_id)
         $team = Team::create([
             'tournament_id' => $tournament->id,
-            'user_id'       => $user->id, // OVO JE FALILO
-            'naziv'         => 'KK Borac Čačak',
-            'grad'          => 'Čačak',
-            'broj_bodova'   => 0
+            'user_id' => $user->id, // OVO JE FALILO
+            'naziv' => 'KK Borac Čačak',
+            'grad' => 'Čačak',
+            'broj_bodova' => 0,
         ]);
 
         // 4. Provera u bazi
         $this->assertDatabaseHas('teams', [
             'naziv' => 'KK Borac Čačak',
             'user_id' => $user->id,
-            'tournament_id' => $tournament->id
+            'tournament_id' => $tournament->id,
         ]);
 
         // 5. Provera relacije
@@ -55,7 +55,7 @@ class TeamRegistrationTest extends TestCase
         // Kreiramo 3 tima povezana sa istim turnirom i korisnikom
         Team::factory()->count(3)->create([
             'tournament_id' => $tournament->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $this->assertCount(3, $tournament->teams);

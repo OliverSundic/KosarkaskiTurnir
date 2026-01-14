@@ -17,7 +17,7 @@ class PlayerFactory extends Factory
             'ime' => fake()->regexify('[A-Za-z0-9]{100}'),
             'prezime' => fake()->regexify('[A-Za-z0-9]{100}'),
             'broj_dresa' => fake()->numberBetween(-10000, 10000),
-            'pozicija' => fake()->randomElement(["plejmejker","bek","krilo","krilni_centar","centar"]),
+            'pozicija' => fake()->randomElement(['plejmejker', 'bek', 'krilo', 'krilni_centar', 'centar']),
         ];
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Tournament;
 use App\Models\Team;
+use App\Models\Tournament;
+use App\Models\User;
 use App\Models\Utakmica;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class LeaderboardTest extends TestCase
 {
@@ -26,11 +26,11 @@ class LeaderboardTest extends TestCase
         // 2. Kreiramo timove DIREKTNO vezane za ovaj turnir
         $teamA = Team::factory()->create([
             'naziv' => 'Partizan',
-            'tournament_id' => $tournament->id
+            'tournament_id' => $tournament->id,
         ]);
         $teamB = Team::factory()->create([
             'naziv' => 'Zvezda',
-            'tournament_id' => $tournament->id
+            'tournament_id' => $tournament->id,
         ]);
 
         // 3. Kreiramo utakmicu
@@ -38,11 +38,11 @@ class LeaderboardTest extends TestCase
             'tournament_id' => $tournament->id,
             'domaci_tim_id' => $teamA->id,
             'strani_tim_id' => $teamB->id,
-            'rezultat'      => '100:80',
-            'status'        => 'zavrseno',
-            'kolo'          => 1,
-            'mesto'         => 'Hala Sportova',
-            'user_id'       => $user->id,
+            'rezultat' => '100:80',
+            'status' => 'zavrseno',
+            'kolo' => 1,
+            'mesto' => 'Hala Sportova',
+            'user_id' => $user->id,
         ]);
 
         // 4. Pozivamo rutu

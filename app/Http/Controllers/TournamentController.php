@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tournament;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Models\Utakmica;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TournamentController extends Controller
@@ -40,20 +39,24 @@ class TournamentController extends Controller
 
         $pobednik = null;
         if ($turnirJeGotov) {
-            $pobednik = $tournament->teams->map(function($tim) use ($tournament) {
+            $pobednik = $tournament->teams->map(function ($tim) use ($tournament) {
                 $bodovi = 0;
                 $mecevi = $tournament->utakmicas()->where('status', 'zavrseno')
-                    ->where(function($q) use ($tim) {
+                    ->where(function ($q) use ($tim) {
                         $q->where('domaci_tim_id', $tim->id)->orWhere('strani_tim_id', $tim->id);
                     })->get();
 
                 foreach ($mecevi as $m) {
                     $rez = explode(':', $m->rezultat);
                     if (count($rez) == 2) {
-                        if ($m->domaci_tim_id == $tim->id) $bodovi += ($rez[0] > $rez[1]) ? 2 : 1;
-                        else $bodovi += ($rez[1] > $rez[0]) ? 2 : 1;
+                        if ($m->domaci_tim_id == $tim->id) {
+                            $bodovi += ($rez[0] > $rez[1]) ? 2 : 1;
+                        } else {
+                            $bodovi += ($rez[1] > $rez[0]) ? 2 : 1;
+                        }
                     }
                 }
+
                 return (object) ['naziv' => $tim->naziv, 'bodovi' => $bodovi];
             })->sortByDesc('bodovi')->first();
         }
@@ -77,7 +80,7 @@ class TournamentController extends Controller
         ]);
 
         // 2. Kreiranje objekta
-        $tournament = new Tournament();
+        $tournament = new Tournament;
         $tournament->user_id = Auth::id();
         $tournament->naziv = $request->naziv;
         $tournament->lokacija = $request->lokacija;
@@ -88,11 +91,11 @@ class TournamentController extends Controller
         $tournament->broj_timova = 0;
 
         // 3. Čuvanje i redirect
-        if($tournament->save()) {
-            return redirect()->route('dashboard')->with('success', 'Turnir "' . $tournament->naziv . '" je uspešno kreiran!');
+        if ($tournament->save()) {
+            return redirect()->route('dashboard')->with('success', 'Turnir "'.$tournament->naziv.'" je uspešno kreiran!');
         }
 
-        return "Greška pri čuvanju u bazu podataka.";
+        return 'Greška pri čuvanju u bazu podataka.';
     }
 
     public function generate(Tournament $tournament)
@@ -119,7 +122,7 @@ class TournamentController extends Controller
                 if ($home !== null && $away !== null) {
                     $schedule[$i][] = [
                         'home' => $home,
-                        'away' => $away
+                        'away' => $away,
                     ];
                 }
             }
@@ -132,6 +135,7 @@ class TournamentController extends Controller
 
         return view('tournament.generate', compact('tournament', 'schedule'));
     }
+
     public function storeSchedule(Request $request, Tournament $tournament)
     {
         // Brišemo stare utakmice ovog turnira pre nego što sačuvamo nove
@@ -158,11 +162,11 @@ class TournamentController extends Controller
                         'tournament_id' => $tournament->id,
                         'domaci_tim_id' => $home,
                         'strani_tim_id' => $away,
-                        'mesto'         => $tournament->lokacija,
-                        'status'        => 'zakazano', // Mora biti isto kao u migraciji (enum)
-                        'user_id'       => Auth::id(),
-                        'rezultat'      => '0:0',
-                        'kolo'          => $i + 1, // OBAVEZNO DODAJ OVO
+                        'mesto' => $tournament->lokacija,
+                        'status' => 'zakazano', // Mora biti isto kao u migraciji (enum)
+                        'user_id' => Auth::id(),
+                        'rezultat' => '0:0',
+                        'kolo' => $i + 1, // OBAVEZNO DODAJ OVO
                     ]);
                 }
             }
@@ -174,24 +178,27 @@ class TournamentController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Raspored je trajno sačuvan u bazi!');
     }
+
     public function leaderboard(Tournament $tournament)
     {
         $timovi = $tournament->teams;
 
-        $rangLista = $timovi->map(function($tim) use ($tournament) {
+        $rangLista = $timovi->map(function ($tim) use ($tournament) {
             $bodovi = 0;
             $utakmice = \App\Models\Utakmica::where('tournament_id', $tournament->id)
                 ->where('status', 'zavrseno')
-                ->where(function($q) use ($tim) {
+                ->where(function ($q) use ($tim) {
                     $q->where('domaci_tim_id', $tim->id)
-                    ->orWhere('strani_tim_id', $tim->id);
+                        ->orWhere('strani_tim_id', $tim->id);
                 })->get();
 
             foreach ($utakmice as $utakmica) {
                 $rezultat = explode(':', $utakmica->rezultat);
-                if (count($rezultat) !== 2) continue;
-                $p1 = (int)$rezultat[0];
-                $p2 = (int)$rezultat[1];
+                if (count($rezultat) !== 2) {
+                    continue;
+                }
+                $p1 = (int) $rezultat[0];
+                $p2 = (int) $rezultat[1];
 
                 if ($utakmica->domaci_tim_id == $tim->id) {
                     $bodovi += ($p1 > $p2) ? 2 : 1;
@@ -202,12 +209,11 @@ class TournamentController extends Controller
 
             return (object) [
                 'naziv' => $tim->naziv,
-                'bodovi' => $bodovi
+                'bodovi' => $bodovi,
             ];
         });
 
         $rangLista = $rangLista->sortByDesc('bodovi')->values();
-
 
         $ukupno = $tournament->utakmicas()->count();
         $zavrseno = $tournament->utakmicas()->where('status', 'zavrseno')->count();
@@ -221,7 +227,7 @@ class TournamentController extends Controller
         return view('tournament.leaderboard', [
             'tournament' => $tournament,
             'timovi' => $rangLista,
-            'pobednik' => $pobednik
+            'pobednik' => $pobednik,
         ]);
     }
 }

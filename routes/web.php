@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\TournamentController;
-use App\Http\Controllers\TeamController;
 use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\UtakmicaController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,5 +49,5 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/utakmicas/{utakmica}/update-score', [UtakmicaController::class, 'updateScore'])->name('utakmicas.update_score');
     Route::resource('utakmicas', UtakmicaController::class);
     Route::get('/tournaments/{tournament}/leaderboard', [TournamentController::class, 'leaderboard'])
-    ->name('tournaments.leaderboard');
+        ->name('tournaments.leaderboard');
 });

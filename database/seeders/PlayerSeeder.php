@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Player;
 use Illuminate\Database\Seeder;
 
 class PlayerSeeder extends Seeder
@@ -20,7 +19,7 @@ class PlayerSeeder extends Seeder
                 'ime' => 'Bogdan',
                 'prezime' => 'Bogdanović',
                 'broj_dresa' => 13,
-                'pozicija' => 'bek'
+                'pozicija' => 'bek',
             ]);
 
             \App\Models\Player::create([
@@ -28,7 +27,7 @@ class PlayerSeeder extends Seeder
                 'ime' => 'Nikola',
                 'prezime' => 'Jokić',
                 'broj_dresa' => 15,
-                'pozicija' => 'centar'
+                'pozicija' => 'centar',
             ]);
         }
     }

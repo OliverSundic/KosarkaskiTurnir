@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('mesto', 255);
             $table->string('rezultat', 20)->default('0:0');
             // Proveri da li je "zakazana" ili "zakazano" - u kontroleru koristiš "zakazano"
-            $table->enum('status', ["zakazano","u_toku","zavrseno","otkazano"])->default('zakazano');
+            $table->enum('status', ['zakazano', 'u_toku', 'zavrseno', 'otkazano'])->default('zakazano');
             $table->integer('kolo')->unsigned(); // DODAJ OVO jer ga koristiš u controlleru
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Team;
 use Illuminate\Database\Seeder;
 
 class TeamSeeder extends Seeder
@@ -23,7 +22,7 @@ class TeamSeeder extends Seeder
                 'tournament_id' => $turnir->id,
                 'naziv' => $ime,
                 'grad' => 'Beograd',
-                'broj_bodova' => 0
+                'broj_bodova' => 0,
             ]);
         }
     }

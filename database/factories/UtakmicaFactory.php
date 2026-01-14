@@ -21,7 +21,7 @@ class UtakmicaFactory extends Factory
             'referee_id' => User::factory(),
             'mesto' => fake()->regexify('[A-Za-z0-9]{255}'),
             'rezultat' => fake()->regexify('[A-Za-z0-9]{20}'),
-            'status' => fake()->randomElement(["zakazana","u_toku","zavrsena","otkazana"]),
+            'status' => fake()->randomElement(['zakazana', 'u_toku', 'zavrsena', 'otkazana']),
             'user_id' => User::factory(),
         ];
     }

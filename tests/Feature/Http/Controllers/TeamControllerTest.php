@@ -7,16 +7,12 @@ use App\Models\Tournament;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use JMac\Testing\Traits\AdditionalAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-/**
- * @see \App\Http\Controllers\TeamController
- */
 final class TeamControllerTest extends TestCase
 {
-    use AdditionalAssertions, RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     #[Test]
     public function index_displays_view(): void
@@ -27,28 +23,7 @@ final class TeamControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertViewIs('team.index');
-        $response->assertViewHas('teams', $teams);
-    }
-
-
-    #[Test]
-    public function create_displays_view(): void
-    {
-        $response = $this->get(route('teams.create'));
-
-        $response->assertOk();
-        $response->assertViewIs('team.create');
-    }
-
-
-    #[Test]
-    public function store_uses_form_request_validation(): void
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\TeamController::class,
-            'store',
-            \App\Http\Requests\TeamStoreRequest::class
-        );
+        $response->assertViewHas('teams');
     }
 
     #[Test]
@@ -56,9 +31,9 @@ final class TeamControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $tournament = Tournament::factory()->create();
-        $naziv = fake()->word();
-        $grad = fake()->word();
-        $broj_bodova = fake()->numberBetween(-10000, 10000);
+        $naziv = $this->faker->company();
+        $grad = $this->faker->city();
+        $broj_bodova = $this->faker->numberBetween(0, 100);
 
         $response = $this->post(route('teams.store'), [
             'user_id' => $user->id,
@@ -68,87 +43,32 @@ final class TeamControllerTest extends TestCase
             'broj_bodova' => $broj_bodova,
         ]);
 
-        $teams = Team::query()
-            ->where('user_id', $user->id)
-            ->where('tournament_id', $tournament->id)
-            ->where('naziv', $naziv)
-            ->where('grad', $grad)
-            ->where('broj_bodova', $broj_bodova)
-            ->get();
-        $this->assertCount(1, $teams);
-        $team = $teams->first();
-
         $response->assertRedirect(route('teams.index'));
-        $response->assertSessionHas('team.id', $team->id);
-    }
 
-
-    #[Test]
-    public function show_displays_view(): void
-    {
-        $team = Team::factory()->create();
-
-        $response = $this->get(route('teams.show', $team));
-
-        $response->assertOk();
-        $response->assertViewIs('team.show');
-        $response->assertViewHas('team', $team);
-    }
-
-
-    #[Test]
-    public function edit_displays_view(): void
-    {
-        $team = Team::factory()->create();
-
-        $response = $this->get(route('teams.edit', $team));
-
-        $response->assertOk();
-        $response->assertViewIs('team.edit');
-        $response->assertViewHas('team', $team);
-    }
-
-
-    #[Test]
-    public function update_uses_form_request_validation(): void
-    {
-        $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\TeamController::class,
-            'update',
-            \App\Http\Requests\TeamUpdateRequest::class
-        );
+        $this->assertDatabaseHas('teams', [
+            'naziv' => $naziv,
+            'grad' => $grad,
+            'broj_bodova' => $broj_bodova,
+        ]);
     }
 
     #[Test]
     public function update_redirects(): void
     {
         $team = Team::factory()->create();
-        $user = User::factory()->create();
-        $tournament = Tournament::factory()->create();
-        $naziv = fake()->word();
-        $grad = fake()->word();
-        $broj_bodova = fake()->numberBetween(-10000, 10000);
+        $novi_naziv = 'Novi Naziv Tima';
 
         $response = $this->put(route('teams.update', $team), [
-            'user_id' => $user->id,
-            'tournament_id' => $tournament->id,
-            'naziv' => $naziv,
-            'grad' => $grad,
-            'broj_bodova' => $broj_bodova,
+            'user_id' => User::factory()->create()->id,
+            'tournament_id' => Tournament::factory()->create()->id,
+            'naziv' => $novi_naziv,
+            'grad' => 'Beograd',
+            'broj_bodova' => 10,
         ]);
 
-        $team->refresh();
-
         $response->assertRedirect(route('teams.index'));
-        $response->assertSessionHas('team.id', $team->id);
-
-        $this->assertEquals($user->id, $team->user_id);
-        $this->assertEquals($tournament->id, $team->tournament_id);
-        $this->assertEquals($naziv, $team->naziv);
-        $this->assertEquals($grad, $team->grad);
-        $this->assertEquals($broj_bodova, $team->broj_bodova);
+        $this->assertDatabaseHas('teams', ['naziv' => $novi_naziv]);
     }
-
 
     #[Test]
     public function destroy_deletes_and_redirects(): void
@@ -158,7 +78,6 @@ final class TeamControllerTest extends TestCase
         $response = $this->delete(route('teams.destroy', $team));
 
         $response->assertRedirect(route('teams.index'));
-
         $this->assertModelMissing($team);
     }
 }

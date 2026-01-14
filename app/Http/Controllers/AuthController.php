@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLogin() { return view('auth.login'); }
-    public function showRegister() { return view('auth.register'); }
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
 
-    public function login(Request $request) {
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -20,8 +26,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->intended('/dashboard');
         }
+
         return back()->withErrors(['email' => 'Pogrešni podaci.']);
     }
 
@@ -34,11 +42,11 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
             'role' => 'required|in:fan,organizer,referee',
         ], [
-        // Ovde definišeš poruke na srpskom
-        'email.unique' => 'Ova email adresa je već zauzeta.',
-        'email.email' => 'Molimo unesite ispravnu email adresu.',
-        'password.min' => 'Lozinka mora imati najmanje :min karaktera.',
-        'required' => 'Polje :attribute je obavezno.',
+            // Ovde definišeš poruke na srpskom
+            'email.unique' => 'Ova email adresa je već zauzeta.',
+            'email.email' => 'Molimo unesite ispravnu email adresu.',
+            'password.min' => 'Lozinka mora imati najmanje :min karaktera.',
+            'required' => 'Polje :attribute je obavezno.',
         ]);
 
         \App\Models\User::create([
@@ -52,8 +60,10 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Uspešno ste se registrovali! Sada se možete ulogovati.');
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
+
         return redirect('/login');
     }
 }

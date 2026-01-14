@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UtakmicaStoreRequest;
 use App\Http\Requests\UtakmicaUpdateRequest;
 use App\Models\Utakmica;
-use App\Models\Tournament;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class UtakmicaController extends Controller
 {
@@ -77,7 +74,7 @@ class UtakmicaController extends Controller
         $p2 = $request->away_points;
 
         // Čuvamo rezultat u formatu "85:80"
-        $utakmica->rezultat = $p1 . ':' . $p2;
+        $utakmica->rezultat = $p1.':'.$p2;
 
         // 2. Logika za dugme "Završi utakmicu"
         if ($request->action == 'finish' && $utakmica->status != 'zavrseno') {
@@ -103,7 +100,6 @@ class UtakmicaController extends Controller
         $utakmica->save();
 
         return redirect()->route('tournaments.show', $utakmica->tournament_id)
-                        ->with('success', 'Utakmica je uspešno ažurirana.');
+            ->with('success', 'Utakmica je uspešno ažurirana.');
     }
-
 }

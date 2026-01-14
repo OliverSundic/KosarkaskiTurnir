@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TeamStoreRequest;
 use App\Http\Requests\TeamUpdateRequest;
 use App\Models\Team;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
 use App\Models\Tournament;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
@@ -60,7 +57,7 @@ class TeamController extends Controller
     public function store(Request $request, Tournament $tournament)
     {
         // Validacija za 12 igrača (dodaj ovo da osiguraš bazu)
-        if (!$request->has('players') || count($request->players) !== 12) {
+        if (! $request->has('players') || count($request->players) !== 12) {
             return back()->withErrors(['players' => 'Morate dodati tačno 12 igrača.']);
         }
 
@@ -70,15 +67,14 @@ class TeamController extends Controller
             'tournament_id' => $tournament->id,
             'naziv' => $request->naziv,
             'grad' => $request->grad,
-            'broj_bodova' => 0
+            'broj_bodova' => 0,
         ]);
 
         foreach ($request->players as $playerData) {
             $team->players()->create($playerData);
         }
 
-
         return redirect()->route('dashboard')
-                 ->with('success', 'Uspešno ste prijavili tim!');
+            ->with('success', 'Uspešno ste prijavili tim!');
     }
 }
