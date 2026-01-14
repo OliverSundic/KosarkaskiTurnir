@@ -8,6 +8,13 @@
 {{-- Glavni kontejner - postavljen na block da bi sve išlo dole --}}
 <div style="display: block; width: 90%; max-width: 1000px; margin: 0 auto; padding-top: 30px;">
 
+    @if(isset($pobednik) && $pobednik)
+        <div style="background: linear-gradient(135deg, #12848B 0%, #1a1a1a 100%); padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);">
+            <h2 style="color: white; margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 3px;">🏆 Pobednik Turnira 🏆</h2>
+            <h1 style="color: var(--cyan); font-size: 42px; margin: 10px 0;">{{ $pobednik->naziv }}</h1>
+            <p style="color: #ccc; margin: 0;">Krajnji rezultat: {{ $pobednik->bodovi }} bodova</p>
+        </div>
+    @endif
     {{-- Ovo dugme vide svi: menadžeri, sudije i navijači --}}
     <div style="display: flex; align-items:center; justify-content:center; margin-bottom: 2%">
         <a href="{{ route('tournaments.leaderboard', $tournament->id) }}"

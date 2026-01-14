@@ -28,23 +28,37 @@ class TournamentController extends Controller
 
     public function show(Tournament $tournament)
     {
-        // 1. Tvoja postojeća logika za timove i rang listu
-        $tournament->loadCount('teams')->load(['teams' => function($query) {
-            $query->orderBy('broj_bodova', 'desc');
-        }]);
+        // Tvoja postojeća logika za dovlačenje utakmica
+        $utakmice = $tournament->utakmicas()->get()->groupBy('kolo');
 
-        // 2. Dodajemo učitavanje utakmica i grupisanje po kolima
-        // Ovo je deo koji ti je falio i zbog kog je izbacivao grešku
-        $utakmice = $tournament->utakmicas()
-            ->with(['domaciTim', 'straniTim'])
-            ->get()
-            ->groupBy('kolo');
+        // Provera da li je turnir završen
+        $ukupno = $tournament->utakmicas()->count();
+        $zavrseno = $tournament->utakmicas()->where('status', 'zavrseno')->count();
+        $turnirJeGotov = ($ukupno > 0) && ($ukupno === $zavrseno);
 
-        // 3. Šaljemo i $tournament i $utakmice u Blade
-        return view('tournament.show', [
-            'tournament' => $tournament,
-            'utakmice' => $utakmice
-        ]);
+        $pobednik = null;
+        if ($turnirJeGotov) {
+            // Pozivamo istu logiku kalkulacije koju imaš u leaderboard metodi
+            // Možeš je izdvojiti u poseban servis, ali evo najbržeg načina:
+            $pobednik = $tournament->teams->map(function($tim) use ($tournament) {
+                $bodovi = 0;
+                $mecevi = $tournament->utakmicas()->where('status', 'zavrseno')
+                    ->where(function($q) use ($tim) {
+                        $q->where('domaci_tim_id', $tim->id)->orWhere('strani_tim_id', $tim->id);
+                    })->get();
+
+                foreach ($mecevi as $m) {
+                    $rez = explode(':', $m->rezultat);
+                    if (count($rez) == 2) {
+                        if ($m->domaci_tim_id == $tim->id) $bodovi += ($rez[0] > $rez[1]) ? 2 : 1;
+                        else $bodovi += ($rez[1] > $rez[0]) ? 2 : 1;
+                    }
+                }
+                return (object) ['naziv' => $tim->naziv, 'bodovi' => $bodovi];
+            })->sortByDesc('bodovi')->first();
+        }
+
+        return view('tournament.show', compact('tournament', 'utakmice', 'pobednik'));
     }
 
     public function create()
@@ -162,14 +176,10 @@ class TournamentController extends Controller
     }
     public function leaderboard(Tournament $tournament)
     {
-        // 1. Uzimamo sve timove turnira
         $timovi = $tournament->teams;
 
-        // 2. Za svaki tim računamo bodove na osnovu završenih utakmica
         $rangLista = $timovi->map(function($tim) use ($tournament) {
             $bodovi = 0;
-
-            // Tražimo sve završene utakmice gde je ovaj tim igrao
             $utakmice = \App\Models\Utakmica::where('tournament_id', $tournament->id)
                 ->where('status', 'zavrseno')
                 ->where(function($q) use ($tim) {
@@ -180,32 +190,38 @@ class TournamentController extends Controller
             foreach ($utakmice as $utakmica) {
                 $rezultat = explode(':', $utakmica->rezultat);
                 if (count($rezultat) !== 2) continue;
-
-                $p1 = (int)$rezultat[0]; // Poeni domaćih
-                $p2 = (int)$rezultat[1]; // Poeni stranih
+                $p1 = (int)$rezultat[0];
+                $p2 = (int)$rezultat[1];
 
                 if ($utakmica->domaci_tim_id == $tim->id) {
-                    // Tim je bio domaćin
                     $bodovi += ($p1 > $p2) ? 2 : 1;
                 } else {
-                    // Tim je bio gost
                     $bodovi += ($p2 > $p1) ? 2 : 1;
                 }
             }
 
-            // Vraćamo privremeni objekat sa nazivom i sračunatim bodovima
             return (object) [
                 'naziv' => $tim->naziv,
                 'bodovi' => $bodovi
             ];
         });
 
-        // 3. Sortiramo listu po bodovima (od najvećeg ka najmanjem)
-        $rangLista = $rangLista->sortByDesc('bodovi');
+        $rangLista = $rangLista->sortByDesc('bodovi')->values();
+
+
+        $ukupno = $tournament->utakmicas()->count();
+        $zavrseno = $tournament->utakmicas()->where('status', 'zavrseno')->count();
+        $turnirJeGotov = ($ukupno > 0) && ($ukupno === $zavrseno);
+
+        $pobednik = null;
+        if ($turnirJeGotov && $rangLista->isNotEmpty()) {
+            $pobednik = $rangLista->first();
+        }
 
         return view('tournament.leaderboard', [
             'tournament' => $tournament,
-            'timovi' => $rangLista
+            'timovi' => $rangLista,
+            'pobednik' => $pobednik
         ]);
     }
 }
