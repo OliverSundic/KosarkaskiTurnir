@@ -35,14 +35,17 @@
         <p class="details-info" style="margin: 5px 0;">{{ $tournament->lokacija }}</p>
 
         <div class="actions-section" style="margin-top: 20px; display: flex; gap: 10px; align-items:center; justify-content:center">
+
             @if(auth()->user()->role == 'organizer')
-                 <a href="{{ route('teams.register', $tournament->id) }}" class="btn-cyan-action">Dodaj tim ručno</a>
-                 <a href="{{ route('tournaments.generate', $tournament->id) }}" class="btn-cyan-action">Generiši raspored</a>
+                <a href="{{ route('teams.register', $tournament->id) }}" class="btn-cyan-action">Dodaj tim ručno</a>
+                <a href="{{ route('tournaments.generate', $tournament->id) }}" class="btn-cyan-action">Generiši raspored</a>
+
             @elseif(auth()->user()->role == 'referee' || auth()->user()->role == 'sudija')
-                 <p class="role-text">Prijavljeni ste kao Sudija</p>
+
             @else
-                <a href="{{ route('teams.register', $tournament->id) }}" class="btn-cyan-action">Prijavi svoj tim!</a>
+                <p class="role-text">Pregledate turnir kao Navijač</p>
             @endif
+
         </div>
     </div>
 
